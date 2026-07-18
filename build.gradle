@@ -1,0 +1,188 @@
+import java.nio.file.Files
+
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.gradle.userdev' version '7.1.38'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'CurseMaven'
+        url = uri('https://cursemaven.com')
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
+    maven {
+        name = 'Modrinth'
+        url = uri('https://api.modrinth.com/maven')
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
+    maven {
+        name = 'Bawnorton'
+        url = uri('https://maven.bawnorton.com/releases')
+        content {
+            includeGroup 'com.github.bawnorton.mixinsquared'
+        }
+    }
+}
+
+def prepareRunConfigs = tasks.register('prepareRunConfigs') {
+    group = 'neoforge runs'
+    description = 'Creates the required Petrolpark dependency override for development runs.'
+    inputs.file(layout.projectDirectory.file('config/fml.toml.example'))
+    outputs.file(layout.projectDirectory.file('run/config/fml.toml'))
+    doLast { task ->
+        File source = task.inputs.files.singleFile
+        task.outputs.files.files.each { target ->
+            if (!target.exists()) {
+                target.parentFile.mkdirs()
+                Files.copy(source.toPath(), target.toPath())
+            }
+        }
+    }
+}
+
+runs {
+    configureEach {
+        systemProperty 'forge.logging.console.level', 'debug'
+        modSource project.sourceSets.main
+    }
+
+    client {
+        workingDirectory project.layout.projectDirectory.dir('run')
+        systemProperty 'mixin.debug.export', 'true'
+        systemProperty 'mixin.debug.verbose', 'true'
+        systemProperty 'mixin.debug.countInjections', 'true'
+        dependsOn.add(prepareRunConfigs)
+    }
+
+    server {
+        workingDirectory project.layout.projectDirectory.dir('run-server')
+        argument '--nogui'
+    }
+}
+
+tasks.matching { it.name == 'runServer' }.configureEach {
+    standardInput = System.in
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+
+//    compileOnly "curse.maven:create-328085:7963363"
+    localRuntime "curse.maven:create-328085:7963363"
+    compileOnly "curse.maven:petrolpark-library-1093595:8251879"
+    runtimeOnly "curse.maven:petrolpark-library-1093595:8251879"
+    compileOnly "curse.maven:jei-238222:8438425"
+    runtimeOnly "curse.maven:jei-238222:8438425"
+//    compileOnly "maven.modrinth:AN0CZD9P:PFCZOOlN"
+    localRuntime "maven.modrinth:AN0CZD9P:PFCZOOlN"
+
+    compileOnly(annotationProcessor(
+            "com.github.bawnorton.mixinsquared:mixinsquared-common:${mixinsquared_version}"
+    ))
+
+    jarJar(implementation(
+            'com.github.bawnorton.mixinsquared:mixinsquared-neoforge'
+    )) {
+        version {
+            strictly "[${mixinsquared_version}]"
+            prefer mixinsquared_version
+        }
+    }
+
+    testImplementation(
+            "com.github.bawnorton.mixinsquared:mixinsquared-common:${mixinsquared_version}"
+    )
+    testImplementation 'org.ow2.asm:asm:9.8'
+    testImplementation 'org.ow2.asm:asm-tree:9.8'
+    testRuntimeOnly 'net.fabricmc:sponge-mixin:0.15.2+mixin.0.8.7'
+}
+
+def metadataProperties = [
+        minecraft_version      : minecraft_version,
+        minecraft_version_range: minecraft_version_range,
+        neo_version_range      : neo_version_range,
+        loader_version_range   : loader_version_range,
+        petrolpark_version     : petrolpark_version,
+        jei_version            : jei_version,
+        create_version         : create_version,
+        mod_id                 : mod_id,
+        mod_name               : mod_name,
+        mod_license            : mod_license,
+        mod_version            : mod_version,
+        mod_authors            : mod_authors,
+        mod_description        : mod_description
+]
+
+tasks.withType(ProcessResources).configureEach {
+    inputs.properties metadataProperties
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand metadataProperties
+    }
+}
+
+tasks.named('processResources') {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+}
+
+tasks.named('jar', Jar) {
+    archiveClassifier = 'slim'
+    from('LICENSE')
+    from('LICENSE_MixinSquared')
+    from('NOTICE')
+}
+
+tasks.named('jarJar') {
+    archiveClassifier = ''
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+tasks.named('test') {
+    // Contract checks are JavaExec tasks; this source set intentionally has no JUnit tests.
+    failOnNoDiscoveredTests = false
+}
+
+tasks.register('verifyCompatibilityContracts', JavaExec) {
+    group = 'verification'
+    description = 'Verifies the Petrolpark and JEI bytecode contracts used by this patch.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'io.github.reasure3.petrolpartjeifix.test.CompatibilityContractVerifier'
+    args 'contracts', sourceSets.main.output.classesDirs.singleFile.absolutePath
+}
+
+tasks.register('verifyPatchJar', JavaExec) {
+    group = 'verification'
+    description = 'Verifies service registration, JarJar contents, metadata, and package isolation.'
+    dependsOn tasks.named('jarJar'), tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'io.github.reasure3.petrolpartjeifix.test.CompatibilityContractVerifier'
+    args 'artifact', tasks.named('jarJar').flatMap { it.archiveFile }.get().asFile.absolutePath
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('verifyCompatibilityContracts')
+    dependsOn tasks.named('verifyPatchJar')
+}

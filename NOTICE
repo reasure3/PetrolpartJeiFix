@@ -1,0 +1,7 @@
+Petrolpark JEI 19.39 Compatibility Fix
+
+This distribution embeds MixinSquared 0.3.7-beta.3 under the MIT License.
+Its copyright and permission notice are reproduced in LICENSE_MixinSquared.
+
+Petrolpark Library, Just Enough Items (JEI), Create, and Petrol's Parts are
+third-party test/runtime inputs. They are not included in this patch artifact.
