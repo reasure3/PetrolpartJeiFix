@@ -335,7 +335,7 @@ public final class CompatibilityContractVerifier {
 
             String metadata = readText(zip, "META-INF/neoforge.mods.toml");
             require(metadata.contains("modId = \"petrolpapetrolpartjeifix\""), "Wrong mod id in metadata");
-            requireExactClientDependency(metadata, "neoforge", "[21.1.236]");
+            requireExactClientDependency(metadata, "neoforge", "[21.1.238]");
             requireExactClientDependency(metadata, "minecraft", "[1.21.1]");
             requireExactClientDependency(metadata, "petrolpark", "[1.4.36]");
             requireExactClientDependency(metadata, "jei", "[19.39.0.368]");

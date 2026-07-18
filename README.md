@@ -21,7 +21,7 @@ petrolpark = ["-jei"]
 |----------------------------------|--------------|
 | Java                             | 21           |
 | Minecraft                        | 1.21.1       |
-| NeoForge                         | 21.1.236     |
+| NeoForge                         | 21.1.238     |
 | Petrolpark Library               | 1.4.36       |
 | JEI                              | 19.39.0.368  |
 | Create                           | 6.0.10       |
