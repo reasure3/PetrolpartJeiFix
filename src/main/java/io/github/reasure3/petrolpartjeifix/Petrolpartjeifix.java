@@ -14,6 +14,6 @@ public final class Petrolpartjeifix {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public Petrolpartjeifix(IEventBus modEventBus, ModContainer modContainer) {
-        LOGGER.info("Loaded Petrolpark 1.4.36 / JEI 19.39.0.368 compatibility patch");
+        LOGGER.info("Loaded Petrolpark 1.4.36 / JEI 19.39.0.X compatibility patch");
     }
 }

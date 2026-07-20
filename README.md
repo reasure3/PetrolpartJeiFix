@@ -1,6 +1,6 @@
 # Petrolpark JEI 19.39 Compatibility Fix
 
-Minecraft 1.21.1에서 Petrolpark Library 1.4.36과 JEI 19.39.0.368을 함께 로드하기 위한 독립 NeoForge 클라이언트 패치 모드입니다. 모드 ID는 `petrolpapetrolpartjeifix`입니다.
+Minecraft 1.21.1에서 Petrolpark Library 1.4.36과 JEI 19.39.0.X를 함께 로드하기 위한 독립 NeoForge 클라이언트 패치 모드입니다. 모드 ID는 `petrolpapetrolpartjeifix`입니다.
 
 이 프로젝트는 Petrolpark Library 모드 JAR를 수정하거나 포함하지 않습니다. Petrolpark의 호환되지 않는 JEI Mixin annotation 두 개만 MixinSquared로 제거하고, JEI 19.39의 호출 지점에 맞는 대체 Mixin을 적용합니다.
 
@@ -23,7 +23,7 @@ petrolpark = ["-jei"]
 | Minecraft                        | 1.21.1       |
 | NeoForge                         | 21.1.235–21.1.238 (기준 21.1.236) |
 | Petrolpark Library               | 1.4.36       |
-| JEI                              | 19.39.0.368  |
+| JEI                              | 19.39.0.X    |
 | Create                           | 6.0.10       |
 | MixinSquared                     | 0.3.7-beta.3 |
 | Petrol's Parts 전체 구성 fixture | 1.2.10       |
@@ -53,8 +53,8 @@ Linux/macOS에서는 `./gradlew`를 사용하세요. GitHub Actions도 같은 `b
 
 ## 설치
 
-1. CurseForge 프로필에 NeoForge 21.1.235–21.1.238 중 하나와 위 표의 정확한 Minecraft, Petrolpark, JEI, Create 버전을 설치합니다.
-2. `build/libs/petrolpapetrolpartjeifix-1.0.1a.jar`를 프로필의 `mods` 폴더에 복사합니다.
+1. CurseForge 프로필에 NeoForge 21.1.235–21.1.238 중 하나와 위 표에 맞는 Minecraft, Petrolpark, JEI, Create 버전을 설치합니다.
+2. `build/libs/petrolpapetrolpartjeifix-1.0.1b.jar`를 프로필의 `mods` 폴더에 복사합니다.
 3. `config/fml.toml`에 필수 dependency override를 추가합니다.
 4. 클라이언트를 실행하고 로그에서 `Removed incompatible Petrolpark @WrapOperation 1/2`와 `2/2`를 확인합니다.
 

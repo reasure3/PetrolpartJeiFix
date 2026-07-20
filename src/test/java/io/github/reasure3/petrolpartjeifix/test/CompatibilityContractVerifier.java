@@ -338,7 +338,7 @@ public final class CompatibilityContractVerifier {
             requireClientDependency(metadata, "neoforge", "[21.1.235,21.1.238]");
             requireClientDependency(metadata, "minecraft", "[1.21.1]");
             requireClientDependency(metadata, "petrolpark", "[1.4.36]");
-            requireClientDependency(metadata, "jei", "[19.39.0.368]");
+            requireClientDependency(metadata, "jei", "[19.39.0,19.39.1)");
             requireClientDependency(metadata, "create", "[6.0.10]");
 
             require(entries.contains("LICENSE") && entries.contains("LICENSE_MixinSquared") && entries.contains("NOTICE"),

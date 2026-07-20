@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Removes only the two Petrolpark 1.4.36 JEI injections whose invocation
- * targets no longer exist in JEI 19.39.0.368.
+ * targets no longer exist in JEI 19.39.0.X.
  *
  * <p>This service is constructed during Mixin bootstrap. Keep this class free
  * of links to Petrolpark, JEI, Minecraft, and NeoForge loader classes.</p>
