@@ -335,11 +335,11 @@ public final class CompatibilityContractVerifier {
 
             String metadata = readText(zip, "META-INF/neoforge.mods.toml");
             require(metadata.contains("modId = \"petrolpapetrolpartjeifix\""), "Wrong mod id in metadata");
-            requireExactClientDependency(metadata, "neoforge", "[21.1.238]");
-            requireExactClientDependency(metadata, "minecraft", "[1.21.1]");
-            requireExactClientDependency(metadata, "petrolpark", "[1.4.36]");
-            requireExactClientDependency(metadata, "jei", "[19.39.0.368]");
-            requireExactClientDependency(metadata, "create", "[6.0.10]");
+            requireClientDependency(metadata, "neoforge", "[21.1.235,21.1.238]");
+            requireClientDependency(metadata, "minecraft", "[1.21.1]");
+            requireClientDependency(metadata, "petrolpark", "[1.4.36]");
+            requireClientDependency(metadata, "jei", "[19.39.0.368]");
+            requireClientDependency(metadata, "create", "[6.0.10]");
 
             require(entries.contains("LICENSE") && entries.contains("LICENSE_MixinSquared") && entries.contains("NOTICE"),
                     "License or third-party notice is missing");
@@ -376,14 +376,14 @@ public final class CompatibilityContractVerifier {
         System.out.println("Patch SHA-256       " + sha256(patchJar));
     }
 
-    private static void requireExactClientDependency(String metadata, String modId, String versionRange) {
+    private static void requireClientDependency(String metadata, String modId, String versionRange) {
         String marker = "modId = \"" + modId + "\"";
         int start = metadata.indexOf(marker);
         require(start >= 0, "Missing dependency metadata for " + modId);
         int nextBlock = metadata.indexOf("[[dependencies.", start + marker.length());
         String block = metadata.substring(start, nextBlock < 0 ? metadata.length() : nextBlock);
         require(block.contains("versionRange = \"" + versionRange + "\""),
-                modId + " dependency is not exact: " + versionRange);
+                modId + " dependency has an unexpected version range: " + versionRange);
         require(block.contains("side = \"CLIENT\""), modId + " dependency is not client-scoped");
     }
 

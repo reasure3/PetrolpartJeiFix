@@ -21,14 +21,14 @@ petrolpark = ["-jei"]
 |----------------------------------|--------------|
 | Java                             | 21           |
 | Minecraft                        | 1.21.1       |
-| NeoForge                         | 21.1.238     |
+| NeoForge                         | 21.1.235–21.1.238 (기준 21.1.236) |
 | Petrolpark Library               | 1.4.36       |
 | JEI                              | 19.39.0.368  |
 | Create                           | 6.0.10       |
 | MixinSquared                     | 0.3.7-beta.3 |
 | Petrol's Parts 전체 구성 fixture | 1.2.10       |
 
-모든 런타임 의존성은 정확한 버전으로 고정되어 있습니다. 검증하지 않은 버전으로 범위를 넓히지 않았습니다.
+NeoForge는 검증된 21.1.235부터 21.1.238까지 지원하며, 개발 및 빌드 기준 버전은 21.1.236입니다. 나머지 런타임 의존성은 정확한 버전으로 고정되어 있습니다.
 
 ## 빌드
 
@@ -53,8 +53,8 @@ Linux/macOS에서는 `./gradlew`를 사용하세요. GitHub Actions도 같은 `b
 
 ## 설치
 
-1. CurseForge 프로필에 위 표의 정확한 Minecraft, NeoForge, Petrolpark, JEI, Create 버전을 설치합니다.
-2. `build/libs/petrolpapetrolpartjeifix-1.0.0.jar`를 프로필의 `mods` 폴더에 복사합니다.
+1. CurseForge 프로필에 NeoForge 21.1.235–21.1.238 중 하나와 위 표의 정확한 Minecraft, Petrolpark, JEI, Create 버전을 설치합니다.
+2. `build/libs/petrolpapetrolpartjeifix-1.0.1a.jar`를 프로필의 `mods` 폴더에 복사합니다.
 3. `config/fml.toml`에 필수 dependency override를 추가합니다.
 4. 클라이언트를 실행하고 로그에서 `Removed incompatible Petrolpark @WrapOperation 1/2`와 `2/2`를 확인합니다.
 
